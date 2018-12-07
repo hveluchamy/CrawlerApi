@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 public class WebCrawlerManager {
-    private static final int MAX_DEPTH = 4;
+    private static final int MAX_DEPTH = 5;
     private HashSet<String> links;
 
     public WebCrawlerManager() {
@@ -18,27 +18,30 @@ public class WebCrawlerManager {
 
     public void getPageLinks(String URL, int depth) {
         if ((!links.contains(URL) && (depth < MAX_DEPTH))) {
-            System.out.println(">> Depth: " + depth + " [" + URL + "]");
-            try {
-                links.add(URL);
 
-                Document document = Jsoup.connect(URL).get();
-                Elements linksOnPage = document.select("a[href]");
+                System.out.println(">> Depth: " + depth + " [" + URL + "]");
+                try {
+                    links.add(URL);
 
-                depth++;
-                for (Element page : linksOnPage) {
-                    getPageLinks(page.attr("abs:href"), depth);
+                    Document document = Jsoup.connect(URL).get();
+                    Elements linksOnPage = document.select("a[href]");
+
+                    depth++;
+                    for (Element page : linksOnPage) {
+                        getPageLinks(page.attr("abs:href"), depth);
+
+                    }
+                } catch (IOException e) {
+                    System.err.println("For '" + URL + "': " + e.getMessage());
                 }
-            } catch (IOException e) {
-                System.err.println("For '" + URL + "': " + e.getMessage());
-            }
+
         }
     }
 
 
     public static void main(String[] args) {
         WebCrawlerManager webCrawlerManager = new WebCrawlerManager();
-        webCrawlerManager.getPageLinks("http://www.espncricinfo.com/series/18693/game/1144994/australia-vs-india-2nd-test-india-in-aus-2018-19", 1);
+        webCrawlerManager.getPageLinks("http://www.espncricinfo.com/cricket/scores/series/18693/india-in-aus-2018-19", 0);
     }
 }
 
