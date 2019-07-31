@@ -23,6 +23,7 @@ public class CrawlerApiController {
 
     @RequestMapping(value = "/sampleApi", method = RequestMethod.GET)
     public String getSampleApi(HttpServletResponse response) {
+        searchManager.getUserByEmailId("blah");
         return "test test";
     }
 
@@ -51,4 +52,6 @@ public class CrawlerApiController {
     public List<String> getResultsByGames(@PathVariable("gameId") String gameId) {
         return searchManager.getResultsByGameId(gameId);
     }
+
+
 }
